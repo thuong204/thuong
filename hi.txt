@@ -1,0 +1,19 @@
+<div class="container">
+        <h1>Personal Information</h1>
+        <div class="info">
+            <p class="label">Name:</p>
+            <p>John Doe</p>
+        </div>
+        <div class="info">
+            <p class="label">Student ID:</p>
+            <p>123456</p>
+        </div>
+        <div class="info">
+            <p class="label">Course:</p>
+            <p>Computer Science 101</p>
+        </div>
+        <div class="info">
+            <p class="label">Activity Class:</p>
+            <p>Group A</p>
+        </div>
+    </div>
