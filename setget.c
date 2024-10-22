@@ -1,7 +1,8 @@
-#include <bsd/stdlib.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
+// Thông tin cá nhân
 #define NAME "John Doe"
 #define ADDRESS "123 Main St, Springfield, USA"
 #define EMAIL "john.doe@example.com"
@@ -23,7 +24,7 @@ typedef struct {
 } Student;
 
 void greetUser(const char *name) {
-    printf("Hello, %s! Welcome to the '%s' program.\n", name, getprogname());
+    printf("Hello, %s! Welcome to the program.\n", name);
 }
 
 // Hàm để hiển thị thông tin sinh viên
@@ -37,10 +38,8 @@ void printStudentInfo(Student *student) {
 }
 
 int main(int argc, char **argv) {
-    setprogname("setget");
-
     // Hiển thị tên chương trình
-    printf("My name is '%s'.\n", getprogname());
+    printf("My name is 'setget'.\n");
 
     // Hiển thị thông tin cá nhân
     printf("Personal Information:\n");
@@ -52,7 +51,7 @@ int main(int argc, char **argv) {
 
     // Kiểm tra xem có đối số tên nào được cung cấp không
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s <your_name>\n", getprogname());
+        fprintf(stderr, "Usage: %s <your_name>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -77,5 +76,5 @@ int main(int argc, char **argv) {
     // Hiển thị thông tin sinh viên
     printStudentInfo(&student);
 
-    exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }
