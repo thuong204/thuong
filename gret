@@ -1,0 +1,26 @@
+// greet.c
+#include <stdio.h>
+#include <string.h>
+#include "greet.h"
+
+static char greeting[100] = "Hello";  // Default greeting
+
+void greet(void) {
+    printf("%s\n", greeting);
+}
+
+void hello(const char *friend, const char *greeting) {
+    printf("%s: %s\n", friend, greeting);
+}
+
+char *getgreeting(void) {
+    return greeting;
+}
+
+int setgreeting(const char *new_greeting) {
+    if (strlen(new_greeting) >= sizeof(greeting)) {
+        return -1;  // Error: greeting too long
+    }
+    strcpy(greeting, new_greeting);
+    return 0;
+}
