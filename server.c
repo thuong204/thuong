@@ -9,12 +9,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#define PORT 3306
+#define PORT 8080
 #define BUFFER_SIZE 1024
 
 void* handle_client(void* arg);
 void get_system_info(int client_socket);
-void receive_message(int client_socket, const char* client_id, int client_port);
+void receive_message(int client_socket);
 void receive_file(int client_socket);
 void execute_command(int client_socket, const char* command);
 void handle_sigint(int sig);
@@ -70,34 +70,29 @@ int main() {
 void *handle_client(void *arg) {
     int client_socket = *(int *)arg;
     char buffer[BUFFER_SIZE];
-    struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
-
-    // Get client address info
-    getpeername(client_socket, (struct sockaddr*)&client_addr, &client_len);
-    char client_id[INET_ADDRSTRLEN];
-    inet_ntop(AF_INET, &client_addr.sin_addr, client_id, sizeof(client_id));
-    int client_port = ntohs(client_addr.sin_port);
 
     while (1) {
         int bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
         if (bytes_received <= 0) {
-            break; // Client has disconnected
+            break; // Client đã ngắt kết nối
         }
         
         buffer[bytes_received] = '\0';
         
+        // Kiểm tra xem buffer có chứa lệnh 'exit' không
         if (strcmp(buffer, "exit") == 0) {
-            break; // End connection
+            break; // Kết thúc kết nối
         }
         
+        // Kiểm tra xem buffer có phải là một tin nhắn không
         if (strcmp(buffer, "send_message") == 0) {
-            receive_message(client_socket, client_id, client_port);
+            receive_message(client_socket);
         } else if (strcmp(buffer, "get_info") == 0) {
             get_system_info(client_socket);
         } else if (strcmp(buffer, "send_file") == 0) {
             receive_file(client_socket);
-        } else if (strncmp(buffer, "command:", 8) == 0) {
+        }
+        else if (strncmp(buffer, "command:", 8) == 0) {
             execute_command(client_socket, buffer + 8); 
         } else {
             printf("Lệnh không hợp lệ: %s\n", buffer);
@@ -155,28 +150,16 @@ void receive_file(int client_socket) {
     printf("%s\n", buffer);
 }
 
-void receive_message(int client_socket, const char* client_id, int client_port) {
+void receive_message(int client_socket) {
     char message[BUFFER_SIZE];
     int bytes_received = recv(client_socket, message, sizeof(message) - 1, 0);
     
     if (bytes_received > 0) {
-        message[bytes_received] = '\0'; // Null-terminate the string
-
-        // Get current time
-        time_t rawtime;
-        struct tm *timeinfo;
-        char time_buffer[80];
-
-        time(&rawtime);
-        timeinfo = localtime(&rawtime);
-        strftime(time_buffer, sizeof(time_buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
-
-        // Print client ID, time, and message
-        printf("Client(%s:%d) gửi tin nhắn: %s (%s)\n", client_id, client_port, message,time_buffer);
+        message[bytes_received] = '\0'; // Kết thúc chuỗi
+        printf("Nhận tin nhắn: %s\n", message);
     } else {
         printf("Lỗi khi nhận tin nhắn từ client.\n");
     }
-    
 }
 
 void get_system_info(int client_socket) {
