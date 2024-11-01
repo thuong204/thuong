@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define PORT 8080
+#define PORT 3306
 #define BUFFER_SIZE 1024
 
 void show_client_menu(int socket);
