@@ -10,7 +10,7 @@
 #include <sys/socket.h>
 #include <dirent.h>
 
-#define PORT 8110
+#define PORT 8080
 #define BUFFER_SIZE 1024
 void *handle_client(void* arg);
 void get_system_info(int client_socket);
@@ -153,11 +153,8 @@ void receive_file(int client_socket) {
     char buffer[BUFFER_SIZE];
     bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
     fwrite(buffer, sizeof(char), bytes_received, file);
-    fclose(file);  
-    
-      
+    fclose(file);        
 }
-
 
 void receive_message(int client_socket, const char* client_id, int client_port) {
     char message[BUFFER_SIZE];
@@ -222,8 +219,8 @@ void send_file_content(int client_socket, const char* filename) {
     send(client_socket, "END", 3, 0);
 }
 
-    void search_file(int client_socket, const char* filename) {
-	printf("Server nhận yêu cầu tìm kiếm file:%s\n",filename);
+void search_file(int client_socket, const char* filename) {
+    printf("Server nhận yêu cầu tìm kiếm file:%s\n",filename);
     if (filename == NULL || strlen(filename) == 0) {
         char invalid_msg[] = "Lệnh không hợp lệ: filename trống.\n";
         send(client_socket, invalid_msg, strlen(invalid_msg), 0);
@@ -239,7 +236,6 @@ void send_file_content(int client_socket, const char* filename) {
         perror("opendir");
         return;
     }
-    
 
     // Tìm kiếm file trong thư mục hiện tại
     while ((entry = readdir(dir)) != NULL) {
@@ -250,7 +246,6 @@ void send_file_content(int client_socket, const char* filename) {
         }
     }
 
-    
     closedir(dir);
        // Nếu không tìm thấy, gửi thông báo "file not found"
     if (!found) {
@@ -259,6 +254,7 @@ void send_file_content(int client_socket, const char* filename) {
     }
     send(client_socket, "END", 3, 0);
 }
+
 void handle_sigint(int sig) {
     printf("\nServer shutting down...\n");
     exit(0);
