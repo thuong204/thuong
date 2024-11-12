@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define PORT 8110
+#define PORT 8080
 #define BUFFER_SIZE 1024
 
 void show_client_menu(int socket);
@@ -35,7 +35,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    printf("Connected to the server successfully!\n");
+    printf("Kết nối đến server thành công!\n");
 
     // Display menu for client
     show_client_menu(client_socket);
@@ -48,14 +48,14 @@ void show_client_menu(int socket) {
     int choice;
 
     while (1) {
-        printf("\n--- Client Menu ---\n");
-        printf("1. View server info\n");
-        printf("2. Send message to server\n");
-        printf("3. Send file to server\n");
-        printf("4. Use server terminal\n");
-        printf("5. Search for a file on server\n"); // Added search option
-        printf("6. Exit\n");
-        printf("Choose an option: ");
+        printf("\n--- Menu Client ---\n");
+        printf("1. Xem thông tin server\n");
+        printf("2. Gửi tin nhắn đến server\n");
+        printf("3. Gửi file đến server\n");
+        printf("4. Sử dụng terminal của server\n");
+        printf("5. Tìm kiếm và tải file từ server\n"); // Added search option
+        printf("6. Thoát\n");
+        printf("Chọn chức năng: ");
         scanf("%d", &choice);
         getchar(); // Read the newline character left behind
 
@@ -77,10 +77,10 @@ void show_client_menu(int socket) {
                 break;
             case 6:
                 send(socket, "exit", 4, 0);
-                printf("Disconnecting from server.\n");
+                printf("Hủy kết nối với server.\n");
                 return;
             default:
-                printf("Invalid choice.\n");
+                printf("Lựa chọn không hợp lệ.\n");
         }
     }
 }
@@ -103,13 +103,13 @@ void send_message(int socket) {
     char message[BUFFER_SIZE];
     send(socket, "send_message", 12, 0);
     
-    printf("Enter message: ");
+    printf("Nhập tin nhắn: ");
     fgets(message, sizeof(message), stdin);
     message[strcspn(message, "\n")] = 0; // Remove newline character
     
     send(socket, message, strlen(message), 0);
     
-    printf("Message sent.\n");
+    printf("Tin nhắn đã gửi.\n");
     return;
 }
 
@@ -148,7 +148,7 @@ void send_file(int socket) {
 void use_terminal(int socket) {
     char command[BUFFER_SIZE - 9];
 
-    printf("Enter command to execute on server (type 'exit' to return to menu):\n");
+    printf("Nhập lệnh để thực hiện trên server (gõ ‘exit’ để trở lại menu):\n");
     while (1) {
         printf("> ");
         fgets(command, sizeof(command), stdin);
